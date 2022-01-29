@@ -87,9 +87,22 @@ bool IntegerSet::add(const int sequence[], int size){
     return ret;
 }
 
-//O( Nlog(N) )
+//O(N)
 bool IntegerSet::remove(int item){
-    assert(bufferSize>=size);
+    if(!has(item))return false;
+    int ok = size-1;
+    int ng = -1;
+    while(ok-ng>1){
+        int mid=(ok+ng)/2;
+        if(set[mid]>=item)ok=mid;
+        else ng=mid;
+    }
+    //delete set[ok]
+    assert(set[ok]==item);
+    // left shift
+    for(int i=ok;i<size-1;++i)set[i]=set[i+1];
+    --size;
+    return true;
 }
 
 //O( log(N) )
