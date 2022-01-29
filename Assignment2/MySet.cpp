@@ -108,6 +108,19 @@ bool IntegerSet::remove(int item){
 //O( log(N) )
 bool IntegerSet::has(int item) const{
     assert(bufferSize>=size);
+    if(size==0 || set[size-1]<item)return false;
+    bool ret = false;
+    // set[ok]>=item is always true
+    int ok=size-1;
+    int ng = -1;
+    assert(set[ok]>=item);
+    while(ok-ng>1){
+        int mid = (ok+ng)/2;
+        if(set[mid]>=item)ok=mid;
+        else ng = mid;
+        assert(set[ok]>=item);
+    }
+    return set[ok]==item;
 }
 
 //O( N )
