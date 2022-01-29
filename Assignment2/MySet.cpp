@@ -163,7 +163,14 @@ IntegerSet IntegerSet::unionWith(const IntegerSet& anotherSet) const{
 //O( N )
 IntegerSet IntegerSet::intersectWith(const IntegerSet& anotherSet) const{
     assert(bufferSize>=size);
-    return IntegerSet();
+    auto ano_set = anotherSet.set;
+    auto ano_size = anotherSet.size;
+    auto ret = IntegerSet();
+    for (int i = 0; i < ano_size; i++){
+        if(!has(ano_set[i]))continue;
+        ret.add(ano_set[i]);
+    }
+    return ret;
 }
 //O( 1 )
 void IntegerSet::clear(){
