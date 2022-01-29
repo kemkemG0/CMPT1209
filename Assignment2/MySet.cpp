@@ -35,7 +35,6 @@ IntegerSet::~IntegerSet(){
 
 //O(N)
 void IntegerSet::allocateNewBuffer(int new_size){
-    std::cout<<"allocate"<<std::endl;
     //allocate memory
     int* new_set = new int[new_size];
     int new_ind=0;
@@ -219,3 +218,7 @@ void IntegerSet::print() const{
     std::cout<<std::endl;
 }
 
+
+int* IntegerSet::st()const{
+    return set;
+}

@@ -49,10 +49,14 @@ public:
 	void clear();
 	int getSize() const;
 	void print() const;
+    //for debug and test
+    int* st()const;
 private:
 	int* set;
 	int size;
 	int bufferSize;
     void allocateNewBuffer(int size);
+    
+    
 };
 #endif
