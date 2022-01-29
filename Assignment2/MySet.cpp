@@ -138,7 +138,7 @@ IntegerSet IntegerSet::unionWith(const IntegerSet& anotherSet) const{
     auto ano_size = anotherSet.size;
     int self_ind=0, ano_ind=0;
     auto ret = IntegerSet();
-    while(ano_ind<ano_size && self_ind<size){
+    while(ano_ind<ano_size || self_ind<size){
         if(self_ind>=size)ret.add(ano_set[ano_ind]),++ano_ind;
         else if(ano_ind>=ano_size)ret.add(set[self_ind]),++self_ind;
         else{
