@@ -132,10 +132,32 @@ bool IntegerSet::has(int item) const{
     return set[ok]==item;
 }
 
-//O( N )
+//O( NlogN )
 IntegerSet IntegerSet::unionWith(const IntegerSet& anotherSet) const{
-    assert(bufferSize>=size);
-    return IntegerSet();
+    auto ano_set = anotherSet.set;
+    auto ano_size = anotherSet.size;
+    int self_ind=0, ano_ind=0;
+    auto ret = IntegerSet();
+    while(ano_ind<ano_size && self_ind<size){
+        if(self_ind>=size)ret.add(ano_set[ano_ind]),++ano_ind;
+        else if(ano_ind>=ano_size)ret.add(set[self_ind]),++self_ind;
+        else{
+            if(ano_set[ano_ind]==set[self_ind]){
+                ret.add(set[self_ind]);
+                ++ano_ind,++self_ind;
+            }
+            else if(ano_set[ano_ind]>set[self_ind]){
+                ret.add(set[self_ind]);
+                ++self_ind;
+            }
+            else{
+                ret.add(ano_set[ano_ind]);
+                ++ano_ind;
+            }
+        }
+    }
+    ano_set = nullptr;
+    return ret;
 }
 
 //O( N )
