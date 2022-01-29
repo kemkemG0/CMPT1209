@@ -12,11 +12,11 @@ IntegerSet::IntegerSet(){
 }
 
 IntegerSet::IntegerSet(const int sequence[], int size){
-    set = new int[10];
-    size=0;
-    bufferSize=10;
+    this->set = new int[10];
+    this->size=0;
+    this->bufferSize=10;
     add(sequence,size);
-    assert(bufferSize>=size);
+    assert(bufferSize>=this->size);
 }
 
 IntegerSet::IntegerSet(const IntegerSet& anotherSet){
