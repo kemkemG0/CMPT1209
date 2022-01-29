@@ -1,15 +1,15 @@
 #include<iostream>
 #include<assert.h>
 #include"MySet.h"
-using namespace std;
 
-//A no-arg constructor that creates an empty set with the buffer size of 10.
+
 IntegerSet::IntegerSet(){
     set = new int[10];
     size=0;
     bufferSize=10;
     assert(bufferSize>=size);
 }
+
 
 IntegerSet::IntegerSet(const int sequence[], int size){
     this->set = new int[10];
@@ -18,6 +18,7 @@ IntegerSet::IntegerSet(const int sequence[], int size){
     add(sequence,size);
     assert(bufferSize>=this->size);
 }
+
 
 IntegerSet::IntegerSet(const IntegerSet& anotherSet){
     assert(bufferSize>=size);
@@ -29,6 +30,7 @@ IntegerSet::~IntegerSet(){
     delete[] set;
 }
 
+
 //O( Nlog(N) )
 bool IntegerSet::add(int item){
     //After added, the set should be sorted;
@@ -39,7 +41,7 @@ bool IntegerSet::add(int item){
     }
     if(has(item))return false;
     if(bufferSize==size){
-        cout<<"allocate"<<endl;
+        std::cout<<"allocate"<<std::endl;
         //allocate memory
         int* new_set = new int[bufferSize + bufferSize/2];
         int new_ind=0;
@@ -83,6 +85,7 @@ bool IntegerSet::add(int item){
     return true;
 }
 
+
 //O( Nlog(N) )
 bool IntegerSet::add(const int sequence[], int size){
     assert(bufferSize>=size);
@@ -95,6 +98,7 @@ bool IntegerSet::add(const int sequence[], int size){
     }
     return ret;
 }
+
 
 //O(N)
 bool IntegerSet::remove(int item){
@@ -114,6 +118,7 @@ bool IntegerSet::remove(int item){
     return true;
 }
 
+
 //O( log(N) )
 bool IntegerSet::has(int item) const{
     assert(bufferSize>=size);
@@ -131,6 +136,7 @@ bool IntegerSet::has(int item) const{
     }
     return set[ok]==item;
 }
+
 
 //O( NlogN )
 IntegerSet IntegerSet::unionWith(const IntegerSet& anotherSet) const{
@@ -160,6 +166,7 @@ IntegerSet IntegerSet::unionWith(const IntegerSet& anotherSet) const{
     return ret;
 }
 
+
 //O( N )
 IntegerSet IntegerSet::intersectWith(const IntegerSet& anotherSet) const{
     assert(bufferSize>=size);
@@ -172,20 +179,29 @@ IntegerSet IntegerSet::intersectWith(const IntegerSet& anotherSet) const{
     }
     return ret;
 }
+
+
 //O( 1 )
 void IntegerSet::clear(){
     assert(bufferSize>=size);
+    delete[] set;
+    set = new int[10];
+    size=0;
+    bufferSize=10;
     return;
 }
+
+
 //O( 1 )
 int IntegerSet::getSize() const{
-    assert(bufferSize>=size);
-    return 0;
+    return size;
 }
+
+
 //O( 1 )
 void IntegerSet::print() const{
     assert(bufferSize>=size);
-    for (int i = 0; i < size; i++) cout<< set[i]<<" ";
-    cout<<endl;
+    for (int i = 0; i < size; i++) std::cout<< set[i]<<" ";
+    std::cout<<std::endl;
 }
 
