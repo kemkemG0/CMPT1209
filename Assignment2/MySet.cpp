@@ -33,6 +33,10 @@ IntegerSet::~IntegerSet(){
 bool IntegerSet::add(int item){
     //After added, the set should be sorted;
     assert(bufferSize>=size);
+    if(size==0){
+        set[0]=item, ++size;
+        return true;
+    }
     if(has(item))return false;
     if(bufferSize==size){
         cout<<"allocate"<<endl;
@@ -50,10 +54,12 @@ bool IntegerSet::add(int item){
         delete[] set;
         set = new_set;
         size++;
+        bufferSize = bufferSize + bufferSize/2;
         return true;
     }
     /* without allocation */
     //add to the tail
+    assert(size-1>=0);
     if(set[size-1]<item){
         set[size]=item;
         ++size;
