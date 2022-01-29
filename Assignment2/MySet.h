@@ -53,5 +53,6 @@ private:
 	int* set;
 	int size;
 	int bufferSize;
+    void allocateNewBuffer(int size);
 };
 #endif

@@ -21,12 +21,14 @@ IntegerSet::IntegerSet(const int sequence[], int size){
 
 
 IntegerSet::IntegerSet(const IntegerSet& anotherSet){
-    assert(bufferSize>=size);
+    this->bufferSize = anotherSet.bufferSize;
+    this->size = anotherSet.size;
+    this->set = new int[this->size];
+    for(int i=0;i<this->size;++i) this->set [i]=anotherSet.set[i];
 }
 
 
 IntegerSet::~IntegerSet(){
-    assert(bufferSize>=size);
     delete[] set;
 }
 
@@ -104,7 +106,7 @@ bool IntegerSet::add(const int sequence[], int size){
     for(int i=0;i<size;++i){
         if(i-1>=0 && copy_seq[i]==copy_seq[i-1])continue;
         if(has(copy_seq[i]))continue;
-        // *This is not sorted yet*
+        /*This is not sorted yet*/
         set[this->size]=copy_seq[i];
         (this->size)++;
         ret=true;
