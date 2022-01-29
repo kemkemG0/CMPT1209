@@ -28,13 +28,16 @@ void test(){
     compare(mySt,st);
     set<int> stB;
     IntegerSet myStB;
-    REP(i,10000){
+    int N=1000000;
+    // auto bb = new int[N];
+    int bb[N]; 
+    REP(i,N){
         int a = rand()%100000000;
-        stB.insert(a), myStB.add(a);
-        a = rand()%100;
-        stB.erase(a), myStB.remove(a);
-        assert(myStB.getSize()==stB.size());
+        bb[i]=a;
+        stB.insert(a);
     }
+    myStB.add(bb,N);
+    assert(myStB.getSize()==stB.size());
     compare(myStB,stB);
 
 
