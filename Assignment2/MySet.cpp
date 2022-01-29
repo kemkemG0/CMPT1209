@@ -1,7 +1,7 @@
 #include<iostream>
 #include<assert.h>
 #include"MySet.h"
-
+#include<algorithm>
 
 IntegerSet::IntegerSet(){
     set = new int[10];
@@ -31,7 +31,21 @@ IntegerSet::~IntegerSet(){
 }
 
 
-//O( Nlog(N) )
+void IntegerSet::allocateNewBuffer(int new_size){
+    std::cout<<"allocate"<<std::endl;
+    //allocate memory
+    int* new_set = new int[new_size];
+    int new_ind=0;
+    for(int old_ind=0;old_ind<size;++old_ind,++new_ind){
+        new_set[new_ind]=set[old_ind];
+    }
+    delete[] set;
+    set = new_set;
+    bufferSize = new_size;
+}
+
+
+//O(N)
 bool IntegerSet::add(int item){
     //After added, the set should be sorted;
     assert(bufferSize>=size);
@@ -40,18 +54,9 @@ bool IntegerSet::add(int item){
         return true;
     }
     if(has(item))return false;
-    if(bufferSize==size){
-        std::cout<<"allocate"<<std::endl;
-        //allocate memory
-        int* new_set = new int[bufferSize + bufferSize/2];
-        int new_ind=0;
-        for(int old_ind=0;old_ind<size;++old_ind,++new_ind){
-            new_set[new_ind]=set[old_ind];
-        }
-        delete[] set;
-        set = new_set;
-        bufferSize = bufferSize + bufferSize/2;
-    }
+    
+    if(bufferSize==size) allocateNewBuffer(bufferSize+bufferSize/2);
+
     assert(bufferSize>=size);
     //add to the tail
     assert(size-1>=0);
@@ -86,16 +91,25 @@ bool IntegerSet::add(int item){
 }
 
 
-//O( Nlog(N) )
+//O( Nlog(N))
 bool IntegerSet::add(const int sequence[], int size){
-    assert(bufferSize>=size);
+    assert(bufferSize>=this->size);
+    auto copy_seq = new int[size];
+    for(int i=0;i<size;++i)copy_seq[i]=sequence[i];
+    std::sort(copy_seq,copy_seq+size);
     bool ret=false;
+    // allocate buffer if needed
+    if((this->size + size) > bufferSize)allocateNewBuffer(this->size + size);
+    // a,b,b,c,d,e,e,f,g
     for(int i=0;i<size;++i){
-        assert(bufferSize>=size);
-        if(has(sequence[i]))continue;
-        add(sequence[i]);
+        if(i-1>=0 && copy_seq[i]==copy_seq[i-1])continue;
+        if(has(copy_seq[i]))continue;
+        // *This is not sorted yet*
+        set[this->size]=copy_seq[i];
+        (this->size)++;
         ret=true;
     }
+    std::sort(set,set+this->size);
     return ret;
 }
 
