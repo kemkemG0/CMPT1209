@@ -33,6 +33,7 @@ IntegerSet::~IntegerSet(){
 }
 
 
+//O(N)
 void IntegerSet::allocateNewBuffer(int new_size){
     std::cout<<"allocate"<<std::endl;
     //allocate memory
@@ -56,20 +57,17 @@ bool IntegerSet::add(int item){
         return true;
     }
     if(has(item))return false;
-    
     if(bufferSize==size) allocateNewBuffer(bufferSize+bufferSize/2);
 
-    assert(bufferSize>=size);
     //add to the tail
     assert(size-1>=0);
     if(set[size-1]<item){
-        set[size]=item;
-        ++size;
+        set[size]=item, ++size;
         return true;
     }
     //insert to middle
-    int ok = size-1;
-    int ng = -1;
+    //binary search
+    int ok = size-1, ng = -1;
     assert(item<set[ok]);
     while(ok-ng>1){
         int mid = (ok+ng)/2;
@@ -98,20 +96,20 @@ bool IntegerSet::add(const int sequence[], int size){
     assert(bufferSize>=this->size);
     auto copy_seq = new int[size];
     for(int i=0;i<size;++i)copy_seq[i]=sequence[i];
-    std::sort(copy_seq,copy_seq+size);
+    std::sort(copy_seq,copy_seq+size);//O(NlogN)
     bool ret=false;
     // allocate buffer if needed
     if((this->size + size) > bufferSize)allocateNewBuffer(this->size + size);
     // a,b,b,c,d,e,e,f,g
-    for(int i=0;i<size;++i){
+    for(int i=0;i<size;++i){//O(N)
         if(i-1>=0 && copy_seq[i]==copy_seq[i-1])continue;
-        if(has(copy_seq[i]))continue;
+        if(has(copy_seq[i]))continue;//O(logN)
         /*This is not sorted yet*/
         set[this->size]=copy_seq[i];
         (this->size)++;
         ret=true;
     }
-    std::sort(set,set+this->size);
+    std::sort(set,set+this->size);//O(NlogN)
     return ret;
 }
 
@@ -126,7 +124,7 @@ bool IntegerSet::remove(int item){
         if(set[mid]>=item)ok=mid;
         else ng=mid;
     }
-    //delete set[ok]
+    //remove set[ok]
     assert(set[ok]==item);
     // left shift
     for(int i=ok;i<size-1;++i)set[i]=set[i+1];
@@ -135,7 +133,7 @@ bool IntegerSet::remove(int item){
 }
 
 
-//O( log(N) )
+//O(logN)
 bool IntegerSet::has(int item) const{
     assert(bufferSize>=size);
     if(size==0 || set[size-1]<item)return false;
@@ -154,26 +152,26 @@ bool IntegerSet::has(int item) const{
 }
 
 
-//O( NlogN )
+//O(N)
 IntegerSet IntegerSet::unionWith(const IntegerSet& anotherSet) const{
     auto ano_set = anotherSet.set;
     auto ano_size = anotherSet.size;
     int self_ind=0, ano_ind=0;
     auto ret = IntegerSet();
-    while(ano_ind<ano_size || self_ind<size){
-        if(self_ind>=size)ret.add(ano_set[ano_ind]),++ano_ind;
-        else if(ano_ind>=ano_size)ret.add(set[self_ind]),++self_ind;
+    while(ano_ind<ano_size || self_ind<size){//O(N)
+        if(self_ind>=size)ret.add(ano_set[ano_ind]),++ano_ind;//O(1)
+        else if(ano_ind>=ano_size)ret.add(set[self_ind]),++self_ind;//O(1)
         else{
             if(ano_set[ano_ind]==set[self_ind]){
-                ret.add(set[self_ind]);
+                ret.add(set[self_ind]);//O(1)
                 ++ano_ind,++self_ind;
             }
             else if(ano_set[ano_ind]>set[self_ind]){
-                ret.add(set[self_ind]);
+                ret.add(set[self_ind]);//O(1)
                 ++self_ind;
             }
             else{
-                ret.add(ano_set[ano_ind]);
+                ret.add(ano_set[ano_ind]);//O(1)
                 ++ano_ind;
             }
         }
@@ -183,15 +181,15 @@ IntegerSet IntegerSet::unionWith(const IntegerSet& anotherSet) const{
 }
 
 
-//O( N )
+//O( NlogN )
 IntegerSet IntegerSet::intersectWith(const IntegerSet& anotherSet) const{
     assert(bufferSize>=size);
     auto ano_set = anotherSet.set;
     auto ano_size = anotherSet.size;
     auto ret = IntegerSet();
     for (int i = 0; i < ano_size; i++){
-        if(!has(ano_set[i]))continue;
-        ret.add(ano_set[i]);
+        if(!has(ano_set[i]))continue;//O(logN)
+        ret.add(ano_set[i]);// O(1) cuz ano_set is ascending order
     }
     return ret;
 }
@@ -214,7 +212,7 @@ int IntegerSet::getSize() const{
 }
 
 
-//O( 1 )
+//O( N )
 void IntegerSet::print() const{
     assert(bufferSize>=size);
     for (int i = 0; i < size; i++) std::cout<< set[i]<<" ";
