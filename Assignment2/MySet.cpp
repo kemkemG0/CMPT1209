@@ -42,22 +42,15 @@ bool IntegerSet::add(int item){
         cout<<"allocate"<<endl;
         //allocate memory
         int* new_set = new int[bufferSize + bufferSize/2];
-        int ind=0;
-        for(int i=0;i<size;++i){
-            if(set[i]<item && (i+1==size||item<set[i+1])){
-                new_set[ind]=item;
-                ++ind;
-            }
-            new_set[ind]=set[i];
-            ++ind;
+        int new_ind=0;
+        for(int old_ind=0;old_ind<size;++old_ind,++new_ind){
+            new_set[new_ind]=set[old_ind];
         }
         delete[] set;
         set = new_set;
-        size++;
         bufferSize = bufferSize + bufferSize/2;
-        return true;
     }
-    /* without allocation */
+    assert(bufferSize>=size);
     //add to the tail
     assert(size-1>=0);
     if(set[size-1]<item){
