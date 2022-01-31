@@ -2,18 +2,19 @@
 #include"MySet.h"
 #include<assert.h>
 using namespace std;
+
 #define REP(i,n) for(int i=0;i<int(n);i++)
 
 int getInput(int arr[]){
     char cur, prev;
     int buff=0,ind=0;
-    while(1){
-        cin.get(cur);
+    while(cin.get(cur)){
         if(cur=='\n'){
             if(isdigit(prev))
                 arr[ind++]=buff;
             break;
         }
+        if(ind>=20)continue; //for consume all characters
         if(cur==' '){
             if(isdigit(prev))
                 arr[ind++]=buff, buff=0;
@@ -25,7 +26,9 @@ int getInput(int arr[]){
     }
     return ind;
 }
-int main(){
+
+
+void testUnionAndInterSect(){
     int first[20]={};
     int second[20]={};
     char p;
@@ -45,4 +48,9 @@ int main(){
 
     cout<<"interSectSet:"<<endl<<"  ";
     interSectSet.print();
+}
+
+
+int main(){
+    testUnionAndInterSect();
 }
