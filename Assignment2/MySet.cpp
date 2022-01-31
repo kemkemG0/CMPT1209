@@ -214,8 +214,9 @@ int IntegerSet::getSize() const{
 //O( N )
 void IntegerSet::print() const{
     assert(bufferSize>=size);
-    for (int i = 0; i < size; i++) std::cout<< set[i]<<" ";
-    std::cout<<std::endl;
+    std::cout<<"{";
+    for (int i = 0; i < size; i++) std::cout<< set[i]<<", ";
+    std::cout<<"}"<<std::endl;
 }
 
 
