@@ -5,25 +5,21 @@ using namespace std;
 #define REP(i,n) for(int i=0;i<int(n);i++)
 
 int getInput(int arr[]){
-    char cur,prev;
+    char cur, prev;
     int buff=0,ind=0;
-    while(cin.get(cur)){
+    while(1){
+        cin.get(cur);
         if(cur=='\n'){
-            if(isdigit(prev)){
-                arr[ind]=buff;
-                ind++;
-            }
+            if(isdigit(prev))
+                arr[ind++]=buff;
             break;
         }
         if(cur==' '){
-            if(isdigit(prev)){
-                arr[ind]=buff;
-                ++ind,buff=0;
-                prev=' ';
-                assert(isdigit(prev)==false);
-            }
+            if(isdigit(prev))
+                arr[ind++]=buff, buff=0;
+            prev=cur;
             continue;
-        };
+        }
         buff = 10*buff + (cur-'0');
         prev = cur;
     }
@@ -39,14 +35,14 @@ int main(){
     int s_sz = getInput(second);
 
     IntegerSet firstSet(first,f_sz);
-    IntegerSet secondSet(second,f_sz);
+    IntegerSet secondSet(second,s_sz);
     
     auto unionSet = firstSet.unionWith(secondSet);
     auto interSectSet = firstSet.intersectWith(secondSet);
 
-    cout<<"UnionSet:"<<endl;
+    cout<<"UnionSet:"<<endl<<"  ";
     unionSet.print();
 
-    cout<<"interSectSet:"<<endl;
+    cout<<"interSectSet:"<<endl<<"  ";
     interSectSet.print();
 }
