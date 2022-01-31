@@ -31,7 +31,7 @@ void test(){
     set<int> stB;
     IntegerSet myStB;
     int N=1000000;
-    int bb[N]; 
+    auto  bb = new int[N]; 
     REP(i,N){
         int a = rand()%10000000;
         bb[i]=a;

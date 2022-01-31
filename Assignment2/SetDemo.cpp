@@ -6,6 +6,7 @@ using namespace std;
 #define REP(i,n) for(int i=0;i<int(n);i++)
 
 int getInput(int arr[]){
+    // I whish I could use string and sstrem ... (;;)
     char cur, prev;
     int buff=0,ind=0;
     while(cin.get(cur)){

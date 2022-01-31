@@ -55,7 +55,7 @@ bool IntegerSet::add(int item){
         set[0]=item, ++size;
         return true;
     }
-    if(has(item))return false;
+    if(item<=set[size-1] && has(item))return false;
     if(bufferSize==size) allocateNewBuffer(bufferSize+bufferSize/2);
 
     //add to the tail
