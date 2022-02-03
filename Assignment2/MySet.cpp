@@ -22,8 +22,9 @@ MySet::MySet(const int sequence[], int size){
 MySet::MySet(const MySet& anotherSet){
     bufferSize = anotherSet.bufferSize;
     size = anotherSet.size;
-    set = new int[size];
-    for(int i=0;i<size;++i) set [i]=anotherSet.set[i];
+    assert(bufferSize>=size);
+    set = new int[bufferSize];
+    for(int i=0;i<size;++i) set[i]=anotherSet.set[i];
 }
 
 
