@@ -36,9 +36,8 @@ void MySet::allocateNewBuffer(int new_size){
     //allocate memory
     int* new_set = new int[new_size];
     int new_ind=0;
-    for(int old_ind=0;old_ind<size;++old_ind,++new_ind){
+    for(int old_ind=0;old_ind<size;++old_ind,++new_ind)
         new_set[new_ind]=set[old_ind];
-    }
     delete[] set, set = new_set;
     bufferSize = new_size;
 }
@@ -66,8 +65,7 @@ bool MySet::add(int item){
     int ok = size-1, ng = -1;
     assert(item<set[ok]);
     while(ok-ng>1){
-        int mid = (ok+ng)/2;
-        assert(mid>=0);
+        int mid = (ok+ng)/2; assert(mid>=0);
         if(set[mid]>item)ok=mid;
         else ng = mid;
         assert(item<set[ok]);
@@ -81,32 +79,29 @@ bool MySet::add(int item){
     */
     //Shift to right
     for(int i=size-1;i>=ok;--i) set[i+1] = set[i];
-    set[ok]=item;
-    ++size;
+    set[ok]=item, ++size;
     return true;
 }
 
 
 //O( Nlog(N))
 bool MySet::add(const int sequence[], int size){
-    assert(bufferSize>=this->size);
-    auto copy_seq = new int[size];
-    for(int i=0;i<size;++i) copy_seq[i] = sequence[i];
-    std::sort(copy_seq,copy_seq+size);//O(NlogN)
-    bool ret=false;
+    assert(bufferSize >= this->size);
+    int all_size = size + this->size;
+    auto all_seq = new int[all_size];
+    for(int i=0; i<size; ++i) all_seq[i] = sequence[i];
+    for(int i=0; i<this->size; ++i) all_seq[i+size] = set[i];
+    std::sort(all_seq, all_seq + all_size);//O(NlogN) // might have same items
     // allocate buffer if needed
-    if((this->size + size) > bufferSize) allocateNewBuffer(this->size + size);
-    // a,b,b,c,d,e,e,f,g
-    for(int i=0;i<size;++i){//O(N)
-        if(i-1>=0 && copy_seq[i]==copy_seq[i-1])continue;
-        if(has(copy_seq[i]))continue;//O(logN)
-        /*This is not sorted yet*/
-        set[this->size]=copy_seq[i];
-        (this->size)++;
-        ret=true;
+    if(all_size > bufferSize) allocateNewBuffer(all_size);
+    int cnt=0;
+    for(int i=0;i<all_size;++i){//O(N)
+        assert(bufferSize>=this->size);
+        cnt+=add(all_seq[i]);
     }
-    std::sort(set,set+this->size);//O(NlogN)
-    return ret;
+    delete[] all_seq;
+    std::sort(set, set+ this->size);//O(NlogN)
+    return cnt > 0;
 }
 
 
@@ -148,29 +143,8 @@ bool MySet::has(int item) const{
 
 //O(N)
 MySet MySet::unionWith(const MySet& anotherSet) const{
-    auto ano_set = anotherSet.set;
-    auto ano_size = anotherSet.size;
-    int self_ind=0, ano_ind=0;
-    auto ret = MySet();
-    while(ano_ind<ano_size || self_ind<size){//O(N)
-        if(self_ind>=size)ret.add(ano_set[ano_ind]),++ano_ind;//O(1)
-        else if(ano_ind>=ano_size)ret.add(set[self_ind]),++self_ind;//O(1)
-        else{
-            if(ano_set[ano_ind]==set[self_ind]){
-                ret.add(set[self_ind]);//O(1)
-                ++ano_ind, ++self_ind;
-            }
-            else if(ano_set[ano_ind]>set[self_ind]){
-                ret.add(set[self_ind]);//O(1)
-                ++self_ind;
-            }
-            else{
-                ret.add(ano_set[ano_ind]);//O(1)
-                ++ano_ind;
-            }
-        }
-    }
-    ano_set = nullptr;
+    auto ret = MySet(anotherSet);
+    ret.add(this->set, this->size);
     return ret;
 }
 
