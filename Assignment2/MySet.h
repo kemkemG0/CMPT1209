@@ -33,7 +33,7 @@
 
 #ifndef MY_SET_H
 #define MY_SET_H
-
+#include <set>//Only for a test function
 class MySet {
 public:
 	MySet();
@@ -50,7 +50,7 @@ public:
 	int getSize() const;
 	void print() const;
     //for debug and test
-    int* st()const;
+    bool isSameSet(std::set<int>& checkSet)const;
 private:
 	int* set;
 	int size;

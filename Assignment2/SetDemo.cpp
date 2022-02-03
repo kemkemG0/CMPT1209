@@ -6,7 +6,7 @@ using namespace std;
 #define REP(i,n) for(int i=0;i<int(n);i++)
 
 void getInput(int *&arr,int sz){
-    if(sz> 20)cout<<"!! Only top-20 elements will use. !!";
+    if(sz> 20)cout<<"!! Only top-20 elements will be used. !!";
     sz = min(sz, 20);
     arr = new int[sz];
     int n;

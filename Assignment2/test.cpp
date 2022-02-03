@@ -5,29 +5,24 @@
 using namespace std;
 #define REP(i,n) for(int i=0;i<int(n);i++)
 
-void compare(const MySet& is,const set<int>& st){
-    set<int> newSt;
-    auto isSt = is.st();
-    for(int i=0;i<is.getSize();++i){
-        newSt.insert(isSt[i]);
-    }
-    assert(st==newSt);
-}
 
 void test(){
     srand(time(0));
+
+    //single add, remove
     set<int> st;
     MySet mySt;
-    REP(i,10000){
+    REP(i,1000){
         int a = rand()%100000000;
         st.insert(a), mySt.add(a);
         a = rand()%100;
         st.erase(a), mySt.remove(a);
-        assert(mySt.getSize()==st.size());
+        assert(mySt.isSameSet(st));
     }
     cout<<"..OK!\n";
-    compare(mySt,st);
-    cout<<"..OK!\n";
+
+
+    //bulk add(check first enough)
     set<int> stB;
     MySet myStB;
     int N=1000000;
@@ -37,25 +32,23 @@ void test(){
         bb[i]=a;
         stB.insert(a);
     }
-    myStB.add(bb,N);
-    assert(myStB.getSize()==stB.size());
-    compare(myStB,stB);
-    cout<<"..OK!\n";
-    auto myInterSect = mySt.intersectWith(myStB);
-    set<int> interSect;
-    for(auto e:st){
-        if(stB.find(e)!=stB.end())interSect.insert(e);
-    }
-    assert(myInterSect.getSize()==interSect.size());
-    compare(myInterSect,interSect);
+    myStB.add(bb, N);
+    assert(myStB.isSameSet(stB));
     cout<<"..OK!\n";
 
+    //intersect
+    auto myInterSect = mySt.intersectWith(myStB);
+    set<int> interSect;
+    for(auto e:st) if(stB.find(e)!=stB.end())interSect.insert(e);
+    assert(myInterSect.isSameSet(interSect));
+    cout<<"..OK!\n";
+
+    //union
     auto myUnionSet = mySt.unionWith(myStB);
     set<int> unionSet;
     for(auto e:st)unionSet.insert(e);
     for(auto e:stB)unionSet.insert(e);
-    assert(myUnionSet.getSize()==unionSet.size());
-    compare(myUnionSet,unionSet);
+    assert(myUnionSet.isSameSet(unionSet));
     cout<<"..OK!\n";
 }
 

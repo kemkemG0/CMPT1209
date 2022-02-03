@@ -2,7 +2,8 @@
 #include<assert.h>
 #include"MySet.h"
 #include<algorithm>
-
+// This is only for test
+#include<set>
 MySet::MySet(){
     set = new int[10];
     size=0, bufferSize=10;
@@ -174,9 +175,7 @@ void MySet::clear(){
 
 
 //O( 1 )
-int MySet::getSize() const{
-    return size;
-}
+int MySet::getSize() const{return size;}
 
 
 //O( N )
@@ -188,6 +187,9 @@ void MySet::print() const{
 }
 
 // This is only for test code
-int* MySet::st()const{
-    return set;
-}
+bool MySet::isSameSet(std::set<int>& checkSet)const{{
+    std::set<int> realSet;
+    for (int i = 0; i < size; i++) realSet.insert(set[i]);
+    assert(realSet.size()==size);
+    return realSet == checkSet;
+}}
