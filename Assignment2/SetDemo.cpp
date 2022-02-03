@@ -5,38 +5,32 @@ using namespace std;
 
 #define REP(i,n) for(int i=0;i<int(n);i++)
 
-int getInput(int arr[]){
-    // I whish I could use string and sstrem ... (;;)
-    char cur, prev;
-    int buff=0,ind=0;
-    while(cin.get(cur)){
-        if(cur=='\n'){
-            if(isdigit(prev))
-                arr[ind++]=buff;
-            break;
-        }
-        if(ind>=20)continue; //for consume all characters
-        if(cur==' '){
-            if(isdigit(prev))
-                arr[ind++]=buff, buff=0;
-            prev=cur;
-            continue;
-        }
-        buff = 10*buff + (cur-'0');
-        prev = cur;
-    }
-    return ind;
+void getInput(int *&arr,int sz){
+    if(sz> 20)cout<<"!! Only top-20 elements will use. !!";
+    sz = min(sz, 20);
+    arr = new int[sz];
+    int n;
+    REP(i, sz) cin>>n, arr[i]=n;
+    cout<<endl;
+    return;
 }
 
 
 void testUnionAndInterSect(){
-    int first[20]={};
-    int second[20]={};
-    char p;
-    cout<<"Input first list >> ";
-    int f_sz = getInput(first);
-    cout<<"Input second list >> ";
-    int s_sz = getInput(second);
+    int *first, *second;
+    
+    int f_sz;
+    cout<<"Size of list>> "; cin>>f_sz;
+    cout<<"Input first list >>";
+    getInput(first, f_sz);
+    cout<<endl;
+
+    int s_sz;
+    cout<<"Size of list>> "; cin>>s_sz;
+    cout<<"Input second list >>";
+    getInput(second, s_sz);
+    cout<<endl;
+
 
     MySet firstSet(first,f_sz);
     MySet secondSet(second,s_sz);
@@ -49,6 +43,7 @@ void testUnionAndInterSect(){
 
     cout<<"interSectSet:"<<endl<<"  ";
     interSectSet.print();
+
 }
 
 
