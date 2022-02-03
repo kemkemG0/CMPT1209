@@ -38,8 +38,8 @@ void testUnionAndInterSect(){
     cout<<"Input second list >> ";
     int s_sz = getInput(second);
 
-    IntegerSet firstSet(first,f_sz);
-    IntegerSet secondSet(second,s_sz);
+    MySet firstSet(first,f_sz);
+    MySet secondSet(second,s_sz);
     
     auto unionSet = firstSet.unionWith(secondSet);
     auto interSectSet = firstSet.intersectWith(secondSet);

@@ -3,7 +3,7 @@
 #include"MySet.h"
 #include<algorithm>
 
-IntegerSet::IntegerSet(){
+MySet::MySet(){
     set = new int[10];
     size=0;
     bufferSize=10;
@@ -11,7 +11,7 @@ IntegerSet::IntegerSet(){
 }
 
 
-IntegerSet::IntegerSet(const int sequence[], int size){
+MySet::MySet(const int sequence[], int size){
     this->set = new int[10];
     this->size=0;
     this->bufferSize=10;
@@ -20,7 +20,7 @@ IntegerSet::IntegerSet(const int sequence[], int size){
 }
 
 
-IntegerSet::IntegerSet(const IntegerSet& anotherSet){
+MySet::MySet(const MySet& anotherSet){
     this->bufferSize = anotherSet.bufferSize;
     this->size = anotherSet.size;
     this->set = new int[this->size];
@@ -28,13 +28,11 @@ IntegerSet::IntegerSet(const IntegerSet& anotherSet){
 }
 
 
-IntegerSet::~IntegerSet(){
-    delete[] set;
-}
+MySet::~MySet(){delete[] set;}
 
 
 //O(N)
-void IntegerSet::allocateNewBuffer(int new_size){
+void MySet::allocateNewBuffer(int new_size){
     //allocate memory
     int* new_set = new int[new_size];
     int new_ind=0;
@@ -48,7 +46,7 @@ void IntegerSet::allocateNewBuffer(int new_size){
 
 
 //O(N)
-bool IntegerSet::add(int item){
+bool MySet::add(int item){
     //After added, the set should be sorted;
     assert(bufferSize>=size);
     if(size==0){
@@ -91,7 +89,7 @@ bool IntegerSet::add(int item){
 
 
 //O( Nlog(N))
-bool IntegerSet::add(const int sequence[], int size){
+bool MySet::add(const int sequence[], int size){
     assert(bufferSize>=this->size);
     auto copy_seq = new int[size];
     for(int i=0;i<size;++i)copy_seq[i]=sequence[i];
@@ -114,7 +112,7 @@ bool IntegerSet::add(const int sequence[], int size){
 
 
 //O(N)
-bool IntegerSet::remove(int item){
+bool MySet::remove(int item){
     if(!has(item))return false;
     int ok = size-1;
     int ng = -1;
@@ -133,7 +131,7 @@ bool IntegerSet::remove(int item){
 
 
 //O(logN)
-bool IntegerSet::has(int item) const{
+bool MySet::has(int item) const{
     assert(bufferSize>=size);
     if(size==0 || set[size-1]<item)return false;
     bool ret = false;
@@ -152,11 +150,11 @@ bool IntegerSet::has(int item) const{
 
 
 //O(N)
-IntegerSet IntegerSet::unionWith(const IntegerSet& anotherSet) const{
+MySet MySet::unionWith(const MySet& anotherSet) const{
     auto ano_set = anotherSet.set;
     auto ano_size = anotherSet.size;
     int self_ind=0, ano_ind=0;
-    auto ret = IntegerSet();
+    auto ret = MySet();
     while(ano_ind<ano_size || self_ind<size){//O(N)
         if(self_ind>=size)ret.add(ano_set[ano_ind]),++ano_ind;//O(1)
         else if(ano_ind>=ano_size)ret.add(set[self_ind]),++self_ind;//O(1)
@@ -181,11 +179,11 @@ IntegerSet IntegerSet::unionWith(const IntegerSet& anotherSet) const{
 
 
 //O( NlogN )
-IntegerSet IntegerSet::intersectWith(const IntegerSet& anotherSet) const{
+MySet MySet::intersectWith(const MySet& anotherSet) const{
     assert(bufferSize>=size);
     auto ano_set = anotherSet.set;
     auto ano_size = anotherSet.size;
-    auto ret = IntegerSet();
+    auto ret = MySet();
     for (int i = 0; i < ano_size; i++){
         if(!has(ano_set[i]))continue;//O(logN)
         ret.add(ano_set[i]);// O(1) cuz ano_set is ascending order
@@ -195,7 +193,7 @@ IntegerSet IntegerSet::intersectWith(const IntegerSet& anotherSet) const{
 
 
 //O( 1 )
-void IntegerSet::clear(){
+void MySet::clear(){
     assert(bufferSize>=size);
     delete[] set;
     set = new int[10];
@@ -206,20 +204,20 @@ void IntegerSet::clear(){
 
 
 //O( 1 )
-int IntegerSet::getSize() const{
+int MySet::getSize() const{
     return size;
 }
 
 
 //O( N )
-void IntegerSet::print() const{
-    assert(bufferSize>=size);
+void MySet::print() const{
+    assert(bufferSize>=size);   
     std::cout<<"{";
     for (int i = 0; i < size; i++) std::cout<< set[i]<<", ";
     std::cout<<"}"<<std::endl;
 }
 
 
-int* IntegerSet::st()const{
+int* MySet::st()const{
     return set;
 }

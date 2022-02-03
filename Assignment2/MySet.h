@@ -34,18 +34,18 @@
 #ifndef MY_SET_H
 #define MY_SET_H
 
-class IntegerSet {
+class MySet {
 public:
-	IntegerSet();
-	IntegerSet(const int sequence[], int size);
-	IntegerSet(const IntegerSet& anotherSet);
-	~IntegerSet();
+	MySet();
+	MySet(const int sequence[], int size);
+	MySet(const MySet& anotherSet);
+	~MySet();
 	bool add(int item);
 	bool add(const int sequence[], int size);
 	bool remove(int item);
 	bool has(int item) const;
-	IntegerSet unionWith(const IntegerSet& anotherSet) const;
-	IntegerSet intersectWith(const IntegerSet& anotherSet) const;
+	MySet unionWith(const MySet& anotherSet) const;
+	MySet intersectWith(const MySet& anotherSet) const;
 	void clear();
 	int getSize() const;
 	void print() const;

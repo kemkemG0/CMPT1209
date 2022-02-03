@@ -5,7 +5,7 @@
 using namespace std;
 #define REP(i,n) for(int i=0;i<int(n);i++)
 
-void compare(const IntegerSet& is,const set<int>& st){
+void compare(const MySet& is,const set<int>& st){
     set<int> newSt;
     auto isSt = is.st();
     for(int i=0;i<is.getSize();++i){
@@ -17,7 +17,7 @@ void compare(const IntegerSet& is,const set<int>& st){
 void test(){
     srand(time(0));
     set<int> st;
-    IntegerSet mySt;
+    MySet mySt;
     REP(i,10000){
         int a = rand()%100000000;
         st.insert(a), mySt.add(a);
@@ -29,7 +29,7 @@ void test(){
     compare(mySt,st);
     cout<<"..OK!\n";
     set<int> stB;
-    IntegerSet myStB;
+    MySet myStB;
     int N=1000000;
     auto  bb = new int[N]; 
     REP(i,N){
