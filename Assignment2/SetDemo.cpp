@@ -34,6 +34,7 @@ void testUnionAndInterSect(){
 
     MySet firstSet(first,f_sz);
     MySet secondSet(second,s_sz);
+    delete[] first, delete[] second;
     
     auto unionSet = firstSet.unionWith(secondSet);
     auto interSectSet = firstSet.intersectWith(secondSet);
@@ -43,6 +44,7 @@ void testUnionAndInterSect(){
 
     cout<<"interSectSet:"<<endl<<"  ";
     interSectSet.print();
+
 
 }
 

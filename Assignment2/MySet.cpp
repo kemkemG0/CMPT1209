@@ -5,8 +5,7 @@
 
 MySet::MySet(){
     set = new int[10];
-    size=0;
-    bufferSize=10;
+    size=0, bufferSize=10;
     assert(bufferSize>=size);
 }
 
@@ -21,10 +20,10 @@ MySet::MySet(const int sequence[], int size){
 
 
 MySet::MySet(const MySet& anotherSet){
-    this->bufferSize = anotherSet.bufferSize;
-    this->size = anotherSet.size;
-    this->set = new int[this->size];
-    for(int i=0;i<this->size;++i) this->set [i]=anotherSet.set[i];
+    bufferSize = anotherSet.bufferSize;
+    size = anotherSet.size;
+    set = new int[size];
+    for(int i=0;i<size;++i) set [i]=anotherSet.set[i];
 }
 
 
@@ -39,8 +38,7 @@ void MySet::allocateNewBuffer(int new_size){
     for(int old_ind=0;old_ind<size;++old_ind,++new_ind){
         new_set[new_ind]=set[old_ind];
     }
-    delete[] set;
-    set = new_set;
+    delete[] set, set = new_set;
     bufferSize = new_size;
 }
 
@@ -73,7 +71,7 @@ bool MySet::add(int item){
         else ng = mid;
         assert(item<set[ok]);
     }
-    assert(ok-1<0 || item>set[ok-1]);
+    assert(ok-1 < 0 || item > set[ok-1]);
     /*
         Shift to right
             a, b, ok, c, d
@@ -92,11 +90,11 @@ bool MySet::add(int item){
 bool MySet::add(const int sequence[], int size){
     assert(bufferSize>=this->size);
     auto copy_seq = new int[size];
-    for(int i=0;i<size;++i)copy_seq[i]=sequence[i];
+    for(int i=0;i<size;++i) copy_seq[i] = sequence[i];
     std::sort(copy_seq,copy_seq+size);//O(NlogN)
     bool ret=false;
     // allocate buffer if needed
-    if((this->size + size) > bufferSize)allocateNewBuffer(this->size + size);
+    if((this->size + size) > bufferSize) allocateNewBuffer(this->size + size);
     // a,b,b,c,d,e,e,f,g
     for(int i=0;i<size;++i){//O(N)
         if(i-1>=0 && copy_seq[i]==copy_seq[i-1])continue;
@@ -114,8 +112,7 @@ bool MySet::add(const int sequence[], int size){
 //O(N)
 bool MySet::remove(int item){
     if(!has(item))return false;
-    int ok = size-1;
-    int ng = -1;
+    int ok = size-1, ng = -1;
     while(ok-ng>1){
         int mid=(ok+ng)/2;
         if(set[mid]>=item)ok=mid;
@@ -124,7 +121,7 @@ bool MySet::remove(int item){
     //remove set[ok]
     assert(set[ok]==item);
     // left shift
-    for(int i=ok;i<size-1;++i)set[i]=set[i+1];
+    for(int i=ok;i<size-1;++i) set[i] = set[i+1];
     --size;
     return true;
 }
@@ -136,8 +133,7 @@ bool MySet::has(int item) const{
     if(size==0 || set[size-1]<item)return false;
     bool ret = false;
     // set[ok]>=item is always true
-    int ok=size-1;
-    int ng = -1;
+    int ok=size-1, ng = -1;
     assert(set[ok]>=item);
     while(ok-ng>1){
         int mid = (ok+ng)/2;
@@ -161,7 +157,7 @@ MySet MySet::unionWith(const MySet& anotherSet) const{
         else{
             if(ano_set[ano_ind]==set[self_ind]){
                 ret.add(set[self_ind]);//O(1)
-                ++ano_ind,++self_ind;
+                ++ano_ind, ++self_ind;
             }
             else if(ano_set[ano_ind]>set[self_ind]){
                 ret.add(set[self_ind]);//O(1)
@@ -197,8 +193,7 @@ void MySet::clear(){
     assert(bufferSize>=size);
     delete[] set;
     set = new int[10];
-    size=0;
-    bufferSize=10;
+    size=0, bufferSize=10;
     return;
 }
 
@@ -217,7 +212,7 @@ void MySet::print() const{
     std::cout<<"}"<<std::endl;
 }
 
-
+// This is only for test code
 int* MySet::st()const{
     return set;
 }
