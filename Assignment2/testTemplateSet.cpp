@@ -1,6 +1,6 @@
 #include<iostream>
 #include<set>
-#include"MySet.h"
+#include"MySetTemplateVer.h"
 #include<assert.h>
 using namespace std;
 #define REP(i,n) for(int i=0;i<int(n);i++)
