@@ -1,6 +1,7 @@
 #include<iostream>
 #include"MySet.h"
 #include<assert.h>
+#include"test.cpp"
 using namespace std;
 
 #define REP(i,n) for(int i=0;i<int(n);i++)
@@ -44,11 +45,10 @@ void testUnionAndInterSect(){
 
     cout<<"interSectSet:"<<endl<<"  ";
     interSectSet.print();
-
-
 }
 
 
 int main(){
     testUnionAndInterSect();
+    SetTest::test();
 }
