@@ -91,7 +91,7 @@ template<typename T,int capacity>
 T Queue<T,capacity>::remove(){
     if(empty()) throw "queue is empty";
     assert(head < maxSize);
-    T ret = q[head];
+    auto ret = q[head];
     head = (head+1) % maxSize;
     --size;
     return ret;
@@ -118,23 +118,25 @@ int Queue<T,capacity>::getSize() const{
 template<typename T,int capacity>
 Queue<T,capacity>& Queue<T,capacity>::operator =(const Queue<T,capacity>& r_val){
     //copy another_q to this
-    delete[] this->q;
-    this->q = new T[r_val.maxSize];
+    delete[] q;
+    q = new T[r_val.maxSize];
 
     for(int i=0;i<r_val.maxSize;++i)
-        this->q[i] = r_val[i];
-    this->size = r_val.size;
-    this->maxSize = r_val.maxSize;
-    this->head = r_val.head;
-    this->tail = r_val.tail;
+        q[i] = r_val.q[i];
+    size = r_val.size;
+    maxSize = r_val.maxSize;
+    head = r_val.head;
+    tail = r_val.tail;
     return *this;
 }
 
 template<typename T,int capacity>
 Queue<T,capacity>& Queue<T,capacity>::operator +(const Queue<T,capacity>& r_val){
-    auto new_queue = new Queue<T,capacity>(this);
-    for(int i=0;i<r_val.getSize();++i) new_queue+=r_val.q[i];
-    return new_queue;
+    auto new_queue = new Queue<T,capacity>;
+    (*new_queue).operator=(*this);
+    for(int i=0;i<r_val.getSize();++i) *new_queue+=r_val.q[i];
+    return *new_queue;
+
 }
 
 template<typename T,int capacity>
@@ -160,7 +162,7 @@ bool Queue<T,capacity>::operator ==(const Queue<T,capacity>& r_val) const{
 
 template<typename T,int capacity>
 bool Queue<T,capacity>::operator !=(const Queue<T,capacity>& r_val) const{
-    return ! this->operator==(r_val);
+    return ! operator==(r_val);
 }
 
 template<typename T,int capacity>
@@ -183,7 +185,7 @@ bool Queue<T,capacity>::isSame(std::queue<T>& real_q){
     auto cp_q = real_q;
     while(!cp_q.empty()){
         auto e = cp_q.front(); cp_q.pop();
-        if(e!=q[ind])return false;
+        if(e!=q[ind]) return false;
         ++ind,ind%=maxSize;
     }
     return true;
