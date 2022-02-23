@@ -3,6 +3,7 @@
 
 #include<iostream>
 #include<assert.h>
+#include<queue>
 
 template <typename T, int capacity> // T is the generic type used for the items in the queue and capacity is the initial size of the queue
 class Queue {
@@ -26,6 +27,8 @@ public:
     friend std::ostream& operator << (std::ostream& os, const Queue<U,capacityU>& outputQ);
 
 
+    //for debug and test
+    bool isSame(std::queue<T>& real_q);
 
 private:
 	T* q; // q points to the front of the queue in the heap
@@ -73,11 +76,13 @@ void Queue<T,capacity>::insert(const T& x){
         // q should be straitforward, from 0 to (tail-1)
         head=0, tail = size+1;
     }
-
+    assert(!isFull());
     // push new element
-    ++tail , ++size;
+    if(empty())this->q[head]=x;
+    else this->q[tail]=x;
+    
+    ++tail , ++size, tail%=maxSize;
     assert(tail<=maxSize);
-    this->q[size-1] = x;
 }
 
 
@@ -163,5 +168,21 @@ std::ostream& operator <<(std::ostream& os, const Queue<T,capacity>& outputQ) {
     os << "\n";
     return os;
 }
+
+
+template<typename T,int capacity>
+bool Queue<T,capacity>::isSame(std::queue<T>& real_q){
+    if(real_q.size()!=this->getSize())return false;
+    int ind=0;
+    auto cp_q = real_q;
+    while(!cp_q.empty()){
+        auto e = cp_q.front(); cp_q.pop();
+        if(e!=q[ind])return false;
+        ++ind;
+    }
+    return true;
+}
+
+
 
 #endif
