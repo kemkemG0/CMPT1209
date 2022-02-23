@@ -18,11 +18,12 @@ public:
     Queue<T,capacity>& operator =(const Queue<T,capacity>& r_val);
     Queue<T,capacity>& operator +(const Queue<T,capacity>& r_val);
     void operator +=(const T& item);
-    void operator -=(const Queue<T,capacity>& r_val);
+    void operator --();
     bool operator ==(const Queue<T,capacity>& r_val) const;
     bool operator !=(const Queue<T,capacity>& r_val) const;
 
-    friend std::ostream& operator << (std::ostream& os, const Queue<T,capacity>& outputQ);
+    template <typename U, int capacityU>
+    friend std::ostream& operator << (std::ostream& os, const Queue<U,capacityU>& outputQ);
 
 
 
@@ -53,7 +54,30 @@ Queue<T,capacity>::Queue(const Queue<T,capacity>& another_q){
 
 template<typename T,int capacity>
 void Queue<T,capacity>::insert(const T& x){
-    
+    if(isFull()){
+        std::cout<<maxSize<<" will be doubled.\n";
+        //expand
+        auto new_maxSize = maxSize * 2;
+        auto new_q = new T[new_maxSize];
+        //copy to the new_q
+        auto count = getSize();
+        size_t new_q_ind=0,old_q_ind=head;
+        while((old_q_ind) != tail){
+            new_q[new_q_ind] = q[old_q_ind];
+            old_q_ind = (old_q_ind+1) % (maxSize);
+            ++new_q_ind;
+        }
+        delete[] q;
+        q = new_q;
+        maxSize = new_maxSize;
+        // q should be straitforward, from 0 to (tail-1)
+        head=0, tail = size+1;
+    }
+
+    // push new element
+    ++tail , ++size;
+    assert(tail<=maxSize);
+    this->q[size-1] = x;
 }
 
 
@@ -70,7 +94,7 @@ T Queue<T,capacity>::remove(){
 
 template<typename T,int capacity>
 bool Queue<T,capacity>::isFull() const{ 
-    return (head==0 && tail==maxSize) || abs(int(head)-int(tail))==1; 
+    return (tail+2)%maxSize == head;
 }
 
 template<typename T,int capacity>
@@ -78,7 +102,10 @@ bool Queue<T,capacity>::empty() const{return size==0;}
 
 
 template<typename T,int capacity>
-int Queue<T,capacity>::getSize() const{return size;}
+int Queue<T,capacity>::getSize() const{
+    assert(size>=0);
+    return size;
+}
 
 
 template<typename T,int capacity>
@@ -98,7 +125,9 @@ Queue<T,capacity>& Queue<T,capacity>::operator =(const Queue<T,capacity>& r_val)
 
 template<typename T,int capacity>
 Queue<T,capacity>& Queue<T,capacity>::operator +(const Queue<T,capacity>& r_val){
-    
+    auto new_queue = new Queue<T,capacity>(this);
+    for(int i=0;i<r_val.getSize();++i) new_queue+=r_val.q[i];
+    return new_queue;
 }
 
 template<typename T,int capacity>
@@ -107,13 +136,18 @@ void Queue<T,capacity>::operator +=(const T& item){
 }
 
 template<typename T,int capacity>
-void Queue<T,capacity>::operator -=(const Queue<T,capacity>& r_val){
-    
+void Queue<T,capacity>::operator --(){
+    this->remove();
 }
 
 template<typename T,int capacity>
 bool Queue<T,capacity>::operator ==(const Queue<T,capacity>& r_val) const{
-    
+    if(this->getSize()!=r_val.getSize()) return false;
+
+    for(int i=0;i<this->getSize();++i)
+        if(this->q[i] != r_val.q[i]) return false;
+
+    return true;
 }
 
 template<typename T,int capacity>
@@ -123,8 +157,9 @@ bool Queue<T,capacity>::operator !=(const Queue<T,capacity>& r_val) const{
 
 template<typename T,int capacity>
 std::ostream& operator <<(std::ostream& os, const Queue<T,capacity>& outputQ) {
+    using namespace std;
     for(int i=0;i<outputQ.size;++i)
-        os << outputQ.q[i] << " ";
+        cout << outputQ.q[(outputQ.head+i)%outputQ.maxSize] << " ";
     os << "\n";
     return os;
 }
