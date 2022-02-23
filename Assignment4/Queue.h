@@ -43,7 +43,7 @@ private:
 
 template<typename T,int capacity>
 Queue<T,capacity>::Queue(){
-    size = head =  0, tail =1;
+    size = head = tail = 0;
     maxSize = capacity;
     q = new T[maxSize];
 }
@@ -58,7 +58,8 @@ Queue<T,capacity>::Queue(const Queue<T,capacity>& another_q){
 template<typename T,int capacity>
 void Queue<T,capacity>::insert(const T& x){
     if(isFull()){
-        std::cout<<maxSize<<" will be doubled.\n";
+        // std::cout<<maxSize<<" will be doubled.\n";
+        // std::cout<<"head: "<<head<<" ,tail: "<<tail<<std::endl;
         //expand
         auto new_maxSize = maxSize * 2;
         auto new_q = new T[new_maxSize];
@@ -74,12 +75,12 @@ void Queue<T,capacity>::insert(const T& x){
         q = new_q;
         maxSize = new_maxSize;
         // q should be straitforward, from 0 to (tail-1)
-        head=0, tail = size+1;
+        head=0, tail = size;
     }
     assert(!isFull());
     // push new element
-    if(empty())this->q[head]=x;
-    else this->q[tail]=x;
+    
+    this->q[tail]=x;
     
     ++tail , ++size, tail%=maxSize;
     assert(tail<=maxSize);
@@ -99,7 +100,8 @@ T Queue<T,capacity>::remove(){
 
 template<typename T,int capacity>
 bool Queue<T,capacity>::isFull() const{ 
-    return (tail+2)%maxSize == head;
+    assert( ((tail+1)%maxSize == head) == (size==maxSize-1));
+    return (tail+1)%maxSize == head;
 }
 
 template<typename T,int capacity>
@@ -155,6 +157,7 @@ bool Queue<T,capacity>::operator ==(const Queue<T,capacity>& r_val) const{
     return true;
 }
 
+
 template<typename T,int capacity>
 bool Queue<T,capacity>::operator !=(const Queue<T,capacity>& r_val) const{
     return ! this->operator==(r_val);
@@ -172,13 +175,16 @@ std::ostream& operator <<(std::ostream& os, const Queue<T,capacity>& outputQ) {
 
 template<typename T,int capacity>
 bool Queue<T,capacity>::isSame(std::queue<T>& real_q){
-    if(real_q.size()!=this->getSize())return false;
-    int ind=0;
+    if(real_q.size()!=this->getSize()){
+        std::cout<<"size differ"<<std::endl;
+        return false;
+    }
+    int ind=head;
     auto cp_q = real_q;
     while(!cp_q.empty()){
         auto e = cp_q.front(); cp_q.pop();
         if(e!=q[ind])return false;
-        ++ind;
+        ++ind,ind%=maxSize;
     }
     return true;
 }
