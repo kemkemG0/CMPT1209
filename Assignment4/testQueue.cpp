@@ -98,23 +98,70 @@ void chainTest(){
     Queue<int,10> my_q2;
     REP(i,10)my_q1+=i;
     FOR(i,50,60)my_q2+=i;
-    cout<< --(my_q2 + (my_q1+my_q2));// test chain
+    // Queue<int,10> my_q3(my_q1+my_q2);
+    // cout<<my_q3<<endl;
+    cout<< my_q1+my_q2;// test chain
 
     Queue<string,10> my_q1_str;
     Queue<string,10> my_q2_str;
     REP(i,10)my_q1_str+=createString();
     FOR(i,50,60)my_q2_str+=createString();
-    cout<< --(my_q2_str + (my_q1_str+my_q2_str));// test chain 
+    // cout<< ((my_q1_str+my_q2_str));// test chain 
+    cout << my_q1_str+my_q2_str;// test chain 
+    
+    
+    // Queue<int,10> my_q3_str(my_q1_str+my_q2_str);
+    // cout<<my_q3_str<<endl;
+    
+    cout<<"ok"<<endl;
+
+    
 }
 
+
+
+void operatorsTest(){
+    Queue<int,10> my_q1;
+    Queue<int,10> my_q2;
+    REP(i,10)my_q1+=i;
+    REP(i,10)my_q2+=i;
+    assert(my_q1==my_q2);
+    my_q1.insert(10);
+    assert(my_q1!=my_q2);
+    my_q1--;
+    assert(my_q1==my_q2);
+
+    cout<<"ok"<<endl;
+}
+
+
+void selfAssignmentTest(){
+    Queue<int,10> my_q1;
+    Queue<int,10> my_q2;
+    my_q1.insert(1);
+    my_q1.insert(1);
+    my_q1.insert(1);
+    my_q2 = my_q1;
+    cout<< my_q2;
+    my_q2 = my_q2;
+    cout<< my_q2;
+}
 /*.........................kemkemG0...........................*/
 signed main() {
     __MAGIC__
     
     srand(time(0));
     
-    randomIntTest();
+    // randomIntTest();
     chainTest();
+    // operatorsTest();
+    
+
+    // --my_q1;
+    // my_q1--;
+
+    int a=10,b=5,c=6;
+    int d = a--;
     
     
     

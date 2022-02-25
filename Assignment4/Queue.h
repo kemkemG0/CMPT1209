@@ -10,6 +10,7 @@ class Queue {
 public:
 	Queue(); // Creates an empty Queue object with the maximum size of "capacity"
 	Queue(const Queue<T,capacity>& another_q); // copy constructor
+    ~Queue(); // destructor
 
 	void insert(const T& x); // Inserts x at the end of the queue; if required the queue is expanded (doubled)
 	T remove(); // Removes and returns the first item of the queue (i.e. item at index 0), or throws an exception if the queue is empty,
@@ -17,14 +18,17 @@ public:
 	int getSize() const; // Returns the number of items in the queue.
     
     Queue<T,capacity>& operator =(const Queue<T,capacity>& r_val);
-    Queue<T,capacity>& operator +(const Queue<T,capacity>& r_val);
+    Queue<T,capacity> operator +(const Queue<T,capacity>& r_val);
     void operator +=(const T& item);
+
     Queue<T,capacity>& operator --();
+    Queue<T,capacity>& operator --(int);
+    
     bool operator ==(const Queue<T,capacity>& r_val) const;
     bool operator !=(const Queue<T,capacity>& r_val) const;
 
     template <typename U, int capacityU>
-    friend std::ostream& operator << (std::ostream& os, const Queue<U,capacityU>& outputQ);
+    friend std::ostream& operator << (std::ostream& os, const Queue<U,capacityU> outputQ);
 
 
     //for debug and test
@@ -50,7 +54,17 @@ Queue<T,capacity>::Queue(){
 
 
 template<typename T,int capacity>
+Queue<T,capacity>::~Queue(){
+    delete[] q;
+    q=nullptr;
+}
+
+
+template<typename T,int capacity>
 Queue<T,capacity>::Queue(const Queue<T,capacity>& another_q){
+    std::cout<<"Copy constructor is called\n";
+    std::cout<< &another_q <<std::endl;
+    std::cout<<"display pointer from cp const\n";
     this->operator=(another_q);
 }
 
@@ -58,8 +72,6 @@ Queue<T,capacity>::Queue(const Queue<T,capacity>& another_q){
 template<typename T,int capacity>
 void Queue<T,capacity>::insert(const T& x){
     if(isFull()){
-        // std::cout<<maxSize<<" will be doubled.\n";
-        // std::cout<<"head: "<<head<<" ,tail: "<<tail<<std::endl;
         //expand
         auto new_maxSize = maxSize * 2;
         auto new_q = new T[new_maxSize];
@@ -79,11 +91,10 @@ void Queue<T,capacity>::insert(const T& x){
     }
     assert(!isFull());
     // push new element
-    
     this->q[tail]=x;
-    
-    ++tail , ++size, tail%=maxSize;
+    tail=(tail+1)%maxSize , ++size;
     assert(tail<=maxSize);
+    assert(size<=maxSize);
 }
 
 
@@ -94,6 +105,7 @@ T Queue<T,capacity>::remove(){
     auto ret = q[head];
     head = (head+1) % maxSize;
     --size;
+    assert(size>=0);
     return ret;
 }
 
@@ -101,11 +113,15 @@ T Queue<T,capacity>::remove(){
 template<typename T,int capacity>
 bool Queue<T,capacity>::isFull() const{ 
     assert( ((tail+1)%maxSize == head) == (size==maxSize-1));
-    return (tail+1)%maxSize == head;
+    // return (tail+1)%maxSize == head;
+    return size == maxSize-1;
 }
 
 template<typename T,int capacity>
-bool Queue<T,capacity>::empty() const{return size==0;}
+bool Queue<T,capacity>::empty() const{
+    // assert(tail==head);
+    return size == 0;
+}
 
 
 template<typename T,int capacity>
@@ -117,6 +133,9 @@ int Queue<T,capacity>::getSize() const{
 
 template<typename T,int capacity>
 Queue<T,capacity>& Queue<T,capacity>::operator =(const Queue<T,capacity>& r_val){
+    std::cout<<"ope= began\n";
+    std::cout<< &r_val<<"\n";
+    if( *this==r_val) return *this;
     //copy another_q to this
     delete[] q;
     q = new T[r_val.maxSize];
@@ -131,11 +150,13 @@ Queue<T,capacity>& Queue<T,capacity>::operator =(const Queue<T,capacity>& r_val)
 }
 
 template<typename T,int capacity>
-Queue<T,capacity>& Queue<T,capacity>::operator +(const Queue<T,capacity>& r_val){
-    auto new_queue = new Queue<T,capacity>;
-    (*new_queue).operator=(*this);
-    for(int i=0;i<r_val.getSize();++i) *new_queue+=r_val.q[i];
-    return *new_queue;
+Queue<T,capacity> Queue<T,capacity>::operator +(const Queue<T,capacity>& r_val){
+    // auto new_queue = Queue<T,capacity>();
+    std::cout<<"ope+ called\n";
+    Queue<T,capacity> new_queue(*this);
+    // (new_queue).operator=(*this);
+    for(int i=0;i<r_val.getSize();++i) new_queue+=r_val.q[i];
+    return new_queue;
 }
 
 template<typename T,int capacity>
@@ -145,9 +166,20 @@ void Queue<T,capacity>::operator +=(const T& item){
 
 template<typename T,int capacity>
 Queue<T,capacity>& Queue<T,capacity>::operator --(){
+    // pre
     this->remove();
     return *this;
 }
+
+
+template<typename T,int capacity>
+Queue<T,capacity>& Queue<T,capacity>::operator --(int){
+    //post
+    auto tmp = new Queue<T,capacity>(*this);
+    --(*this);
+    return *tmp;
+}
+
 
 template<typename T,int capacity>
 bool Queue<T,capacity>::operator ==(const Queue<T,capacity>& r_val) const{
@@ -166,10 +198,11 @@ bool Queue<T,capacity>::operator !=(const Queue<T,capacity>& r_val) const{
 }
 
 template<typename T,int capacity>
-std::ostream& operator <<(std::ostream& os, const Queue<T,capacity>& outputQ) {
+std::ostream& operator <<(std::ostream& os, const Queue<T,capacity> outputQ) {
     using namespace std;
+    cout<<outputQ.size<<endl;
     for(int i=0;i<outputQ.size;++i)
-        cout << outputQ.q[(outputQ.head+i)%outputQ.maxSize] << " ";
+        os << outputQ.q[(outputQ.head+i)%outputQ.maxSize] << " ";
     os << "\n";
     return os;
 }
