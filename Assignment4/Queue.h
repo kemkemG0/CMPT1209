@@ -19,7 +19,7 @@ public:
     Queue<T,capacity>& operator =(const Queue<T,capacity>& r_val);
     Queue<T,capacity>& operator +(const Queue<T,capacity>& r_val);
     void operator +=(const T& item);
-    void operator --();
+    Queue<T,capacity>& operator --();
     bool operator ==(const Queue<T,capacity>& r_val) const;
     bool operator !=(const Queue<T,capacity>& r_val) const;
 
@@ -136,7 +136,6 @@ Queue<T,capacity>& Queue<T,capacity>::operator +(const Queue<T,capacity>& r_val)
     (*new_queue).operator=(*this);
     for(int i=0;i<r_val.getSize();++i) *new_queue+=r_val.q[i];
     return *new_queue;
-
 }
 
 template<typename T,int capacity>
@@ -145,8 +144,9 @@ void Queue<T,capacity>::operator +=(const T& item){
 }
 
 template<typename T,int capacity>
-void Queue<T,capacity>::operator --(){
+Queue<T,capacity>& Queue<T,capacity>::operator --(){
     this->remove();
+    return *this;
 }
 
 template<typename T,int capacity>
