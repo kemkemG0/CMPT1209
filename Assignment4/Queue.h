@@ -19,7 +19,7 @@ public:
     
     Queue<T,capacity>& operator =(const Queue<T,capacity>& r_val);
     Queue<T,capacity> operator +(const Queue<T,capacity>& r_val);
-    void operator +=(const T& item);
+    Queue<T,capacity>& operator +=(const T& item);
 
     Queue<T,capacity>& operator --();
     Queue<T,capacity> operator --(int);
@@ -32,7 +32,7 @@ public:
 
 
     //for debug and test
-    bool isSame(std::queue<T>& real_q);
+    bool isSame(std::queue<T> real_q);
 
 private:
 	T* q; // q points to the front of the queue in the heap
@@ -157,8 +157,9 @@ Queue<T,capacity> Queue<T,capacity>::operator +(const Queue<T,capacity>& r_val){
 }
 
 template<typename T,int capacity>
-void Queue<T,capacity>::operator +=(const T& item){
+Queue<T,capacity>& Queue<T,capacity>::operator +=(const T& item){
     this->insert(item);
+    return *this;
 }
 
 template<typename T,int capacity>
@@ -181,8 +182,11 @@ Queue<T,capacity> Queue<T,capacity>::operator --(int){
 template<typename T,int capacity>
 bool Queue<T,capacity>::operator ==(const Queue<T,capacity>& r_val) const{
     if(this->getSize()!=r_val.getSize()) return false;
-    for(int i=0;i<this->getSize();++i)
-        if(this->q[i] != r_val.q[i]) return false;
+    int sz = r_val.getSize();
+    for(int i=0;i<sz;++i){
+        if(this->q[(head+i)%maxSize]!=r_val.q[(r_val.head+i)%r_val.maxSize])
+            return false;
+    }
     return true;
 }
 
@@ -204,13 +208,13 @@ std::ostream& operator <<(std::ostream& os, const Queue<T,capacity>& outputQ) {
 
 
 template<typename T,int capacity>
-bool Queue<T,capacity>::isSame(std::queue<T>& real_q){
-    if(real_q.size()!=this->getSize()) return false;
-    int ind = head; auto cp_q = real_q;
+bool Queue<T,capacity>::isSame(std::queue<T> cp_q){
+    if(cp_q.size()!=this->getSize()) return false;
+    int ind = head;
     while(!cp_q.empty()){
         auto e = cp_q.front(); cp_q.pop();
         if(e!=q[ind]) return false;
-        ++ind,ind%=maxSize;
+        ind=(ind+1)%maxSize;
     }
     return true;
 }

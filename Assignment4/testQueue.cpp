@@ -1,4 +1,8 @@
-#include<bits/stdc++.h>
+// #include<bits/stdc++.h>
+#include<vector>
+#include<queue>
+#include<string>
+
 #include"Queue.h"
 
 using ll= long long;
@@ -36,7 +40,7 @@ void randomIntTest(){
     assert(my_q.isSame(real_q));
 
     int e;
-    REP(i,10000){
+    REP(i,100000){
         e = rand()%100000000;
         my_q.insert(e);
         real_q.push(e);
@@ -58,7 +62,7 @@ void randomStringTest(){
     assert(my_q.isSame(real_q));
 
     string e;
-    REP(i,1000){
+    REP(i,10000){
         e = createString();
         my_q.insert(e);
         real_q.push(e);
@@ -118,8 +122,6 @@ void chainTest(){
     cout<<"ok"<<endl;
 }
 
-
-
 void operatorsTest(){
     Queue<int,10> my_q1;
     Queue<int,10> my_q2;
@@ -129,7 +131,9 @@ void operatorsTest(){
     my_q1.insert(10);
     assert(my_q1!=my_q2);
     my_q1--;
-    assert(my_q1==my_q2);
+    cout<<my_q1;
+    cout<<my_q2;
+    assert(my_q1!=my_q2);
 
     cout<<"ok"<<endl;
 }
@@ -156,10 +160,6 @@ signed main() {
     randomStringTest();
     chainTest();
     operatorsTest();
-    
-    int a=10,b=5,c=6;
-    int d = a--;
-    
     
     
     return 0;
