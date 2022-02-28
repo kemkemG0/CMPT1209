@@ -68,6 +68,7 @@ Queue<T,capacity>::Queue(const Queue<T,capacity>& another_q){
 }
 
 
+//O(1) but when expanding O(N)
 template<typename T,int capacity>
 void Queue<T,capacity>::insert(const T& x){
     if(isFull()){
@@ -98,6 +99,7 @@ void Queue<T,capacity>::insert(const T& x){
 }
 
 
+//O(1)
 template<typename T,int capacity>
 T Queue<T,capacity>::remove(){
     if(empty()) throw "queue is empty";
@@ -110,6 +112,7 @@ T Queue<T,capacity>::remove(){
 }
 
 
+//O(1)
 template<typename T,int capacity>
 bool Queue<T,capacity>::isFull() const{ 
     assert( ((tail+1)%maxSize == head) == (size==maxSize-1));
@@ -117,6 +120,8 @@ bool Queue<T,capacity>::isFull() const{
     return size == maxSize-1;
 }
 
+
+//O(1)
 template<typename T,int capacity>
 bool Queue<T,capacity>::empty() const{
     // assert(tail==head);
@@ -124,6 +129,7 @@ bool Queue<T,capacity>::empty() const{
 }
 
 
+//O(1)
 template<typename T,int capacity>
 int Queue<T,capacity>::getSize() const{
     assert(size>=0);
@@ -131,6 +137,7 @@ int Queue<T,capacity>::getSize() const{
 }
 
 
+//O(N)
 template<typename T,int capacity>
 Queue<T,capacity>& Queue<T,capacity>::operator =(const Queue<T,capacity>& r_val){
     /* copy another_q to this */
@@ -149,6 +156,8 @@ Queue<T,capacity>& Queue<T,capacity>::operator =(const Queue<T,capacity>& r_val)
     return *this;
 }
 
+
+//O(N)
 template<typename T,int capacity>
 Queue<T,capacity> Queue<T,capacity>::operator +(const Queue<T,capacity>& r_val){
     Queue<T,capacity> new_queue(*this);
@@ -156,12 +165,16 @@ Queue<T,capacity> Queue<T,capacity>::operator +(const Queue<T,capacity>& r_val){
     return new_queue;
 }
 
+
+//O(1)
 template<typename T,int capacity>
 Queue<T,capacity>& Queue<T,capacity>::operator +=(const T& item){
     this->insert(item);
     return *this;
 }
 
+
+//O(1)
 template<typename T,int capacity>
 Queue<T,capacity>& Queue<T,capacity>::operator --(){
     // pre
@@ -170,6 +183,7 @@ Queue<T,capacity>& Queue<T,capacity>::operator --(){
 }
 
 
+//O(N)
 template<typename T,int capacity>
 Queue<T,capacity> Queue<T,capacity>::operator --(int){
     //post
@@ -179,6 +193,7 @@ Queue<T,capacity> Queue<T,capacity>::operator --(int){
 }
 
 
+//O(N)
 template<typename T,int capacity>
 bool Queue<T,capacity>::operator ==(const Queue<T,capacity>& r_val) const{
     if(this->getSize()!=r_val.getSize()) return false;
@@ -191,6 +206,7 @@ bool Queue<T,capacity>::operator ==(const Queue<T,capacity>& r_val) const{
 }
 
 
+//O(N)
 template<typename T,int capacity>
 bool Queue<T,capacity>::operator !=(const Queue<T,capacity>& r_val) const{
     return ! operator==(r_val);
@@ -207,6 +223,7 @@ std::ostream& operator <<(std::ostream& os, const Queue<T,capacity>& outputQ) {
 }
 
 
+//only for debugging and testing
 template<typename T,int capacity>
 bool Queue<T,capacity>::isSame(std::queue<T> cp_q){
     if(cp_q.size()!=this->getSize()) return false;
